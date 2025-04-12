@@ -1,0 +1,13 @@
+<html>
+<body>
+<script>
+    var id = window.location.search.split('=')[1];
+    if (id == 'undefined' || id == null) {
+        window.location.href = "index.html";
+    }else {
+        var sha512 = id;
+        window.location.href = "view.html?id=" + sha512
+    }
+</script>
+</body>
+</html>
