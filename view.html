@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <script>
+            var id = window.location.search.split('=')[1];
+            if (id == 'undefined' || id == null) {
+                window.location.href = "index.html";
+            }else {
+                const response = await fetch('https://film.r2.csec.top/films/'+id+'/index.json')
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.clone().json();
+                var vidsize = data.vidsize;
+                    //vidsize is a list of video sizes
+                lst = document.getElementById("lst");
+                for (var i = 0; i < vidsize.length; i++) {
+                    var button = document.createElement("button");
+                    button.innerHTML = vidsize[i];
+                    button.onclick = function () {
+                       var vidcontainor = document.getElementById("vidcontainor");
+                        vidcontainor.src = "https://admin-ll55.github.io/m3u8/?v=https://film.r2.csec.top/films/"+id+"/"+this.innerHTML+".m3u8";
+                    };
+                    lst.appendChild(button);
+                }
+            }
+        </script>
+        <iframe id="vidcontainor" src="" style="width:100%;height:90%;"></iframe>
+        <div id="lst" style="width:100%;height:10%;overflow-x:auto;white-space:nowrap;"></div>
+    </body>
+</html>
