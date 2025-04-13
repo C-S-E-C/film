@@ -22,7 +22,8 @@
                         button.onclick = function () {
                            // var vidcontainor = document.getElementById("vidcontainor");
                            // vidcontainor.src = "https://admin-ll55.github.io/m3u8/?v=https://film.r2.csec.top/films/"+id+"/"+this.innerHTML+".m3u8";
-                            window.open("m3u8.html?id="+id+"&vidsize="+vidsize[i])
+                            var url = "m3u8.html?id="+id+"&vidsize="+this.innerHTML;
+                            window.open(url)
                         };
                         lst.appendChild(button);
                     }
