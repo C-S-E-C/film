@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #video {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            background-color: #000;
+        }
+        #status {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        #error {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: red;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 80%;
+            text-align: center;
+            display: none;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="video" controls autoplay></video>
+        <div id="status">正在加载...</div>
+        <div id="error"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('video');
+            const statusEl = document.getElementById('status');
+            const errorEl = document.getElementById('error');
+            
+            // 从URL参数获取m3u8链接
+            function getM3U8Url() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const m3u8Url = urlParams.get('url');
+                
+                if (!m3u8Url) {
+                    showError('URL参数中未找到m3u8链接，请使用?url=你的m3u8链接');
+                    return null;
+                }
+                
+                // 解码URL以防被编码
+                try {
+                    return decodeURIComponent(m3u8Url);
+                } catch (e) {
+                    return m3u8Url;
+                }
+            }
+            
+            function showError(message) {
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+                statusEl.style.display = 'none';
+            }
+            
+            function updateStatus(message) {
+                statusEl.textContent = message;
+            }
+            
+            const m3u8Url = getM3U8Url();
+            if (!m3u8Url) return;
+            
+            updateStatus('正在加载: ' + m3u8Url);
+            
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                
+                hls.loadSource(m3u8Url);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    updateStatus('正在播放: ' + m3u8Url);
+                    video.play().catch(e => {
+                        showError('自动播放失败: ' + e.message);
+                    });
+                });
+                
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    let errorType = data.type;
+                    let errorDetails = data.details;
+                    let errorFatal = data.fatal;
+                    
+                    let errorMsg = `播放错误: ${errorDetails}`;
+                    if (errorFatal) {
+                        showError(errorMsg);
+                    } else {
+                        updateStatus(errorMsg);
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // 原生支持HLS的设备（如iOS Safari）
+                video.src = m3u8Url;
+                video.addEventListener('loadedmetadata', function() {
+                    updateStatus('正在播放: ' + m3u8Url);
+                    video.play().catch(e => {
+                        showError('自动播放失败: ' + e.message);
+                    });
+                });
+            } else {
+                showError('您的浏览器不支持播放m3u8视频');
+            }
+            
+            // 点击视频全屏
+            video.addEventListener('click', function() {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+            });
+            
+            // 自动尝试全屏（注意：大多数浏览器不允许自动全屏，需要用户手势）
+            document.addEventListener('click', function() {
+                if (document.fullscreenElement === null && 
+                    document.webkitFullscreenElement === null && 
+                    document.msFullscreenElement === null) {
+                    const container = document.getElementById('video-container');
+                    if (container.requestFullscreen) {
+                        container.requestFullscreen().catch(e => {
+                            console.log('全屏请求被拒绝:', e);
+                        });
+                    } else if (container.webkitRequestFullscreen) {
+                        container.webkitRequestFullscreen();
+                    } else if (container.msRequestFullscreen) {
+                        container.msRequestFullscreen();
+                    }
+                }
+            }, {once: true});
+        });
+    </script>
+</body>
+</html>
