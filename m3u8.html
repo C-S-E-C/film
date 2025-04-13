@@ -108,7 +108,7 @@
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    updateStatus('正在播放: ' + m3u8Url);
+                    updateStatus('Click anywhere to play.');
                     video.play().catch(e => {
                         console.log('自动播放失败: ' + e.message);
                     });
