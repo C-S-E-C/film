@@ -76,13 +76,7 @@
                 // const m3u8Url = urlParams.get('url');
                 const id = urlParams.get('id');
                 const vidsize = urlParams.get('vidsize');
-                m3u8Url = "https://film.r2.csec.top/films/"+id+"/"+vidsize+".m3u8"
-                
-                if (!m3u8Url) {
-                    showError('URL参数中未找到m3u8链接，请使用?url=你的m3u8链接');
-                    return null;
-                }
-                
+                m3u8Url = "https://film.r2.csec.top/films/"+id+"/"+vidsize+".m3u8"                
                 // 解码URL以防被编码
                 try {
                     return decodeURIComponent(m3u8Url);
