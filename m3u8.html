@@ -73,7 +73,10 @@
             // 从URL参数获取m3u8链接
             function getM3U8Url() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const m3u8Url = urlParams.get('url');
+                // const m3u8Url = urlParams.get('url');
+                const id = urlParams.get('id');
+                const vidsize = urlParams.get('vidsize');
+                m3u8Url = "https://film.r2.csec.top/films/"+id+"/"+vidsize+".m3u8"
                 
                 if (!m3u8Url) {
                     showError('URL参数中未找到m3u8链接，请使用?url=你的m3u8链接');
