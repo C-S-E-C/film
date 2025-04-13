@@ -33,12 +33,20 @@
             font-size: 1.2em;
             color: #333;
         }
+        .allfilm-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1 style="text-align: center; padding: 20px;">Popular Films</h1>
+    <h3>Popular</h1>
     <div class="film-container" id="filmContainer">
         <!-- Films will be dynamically loaded here -->
+    <h3>All</h3>
+    <div class="allfilm-container" id="allfilmContainer"></div>
     </div>
 
     <script>
@@ -53,9 +61,9 @@
                 if (!responseAll.ok) {
                     throw new Error(`HTTP error! status: ${responseAll.status}`);
                 }
-                const allFilms = await responseAll.json();
+                const allFilms = await responseAll.clone.json();
                 const filmContainer = document.getElementById('filmContainer');
-
+                const allfilmContainer = document.getElementById('allfilmContainer');
                 data.popular.forEach(filmName => {
                     const filmDetails = allFilms.find(film => film.name === filmName);
                     if (filmDetails) {
@@ -70,6 +78,18 @@
                         filmCard.appendChild(a);
                         filmContainer.appendChild(filmCard);
                     }
+                });
+                allFilms.forEach(film => {
+                    const filmCard = document.createElement('div');
+                    filmCard.className = 'film-card';
+                    const a = document.createElement('a');
+                    a.href = "details.html?id=" + film.sha512;
+                    a.innerHTML = `
+                        <img style="width:70px;height:100px;"src="https://film.r2.csec.top/films/${film.sha512}/cover.png" alt="${film.name}">
+                        <h3>${film.name}</h3>
+                    `;
+                    filmCard.appendChild(a);
+                    allfilmContainer.appendChild(filmCard);
                 });
             } catch (error) {
                 console.error('Error fetching popular films:', error);
