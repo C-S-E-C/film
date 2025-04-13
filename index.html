@@ -61,7 +61,7 @@
                 if (!responseAll.ok) {
                     throw new Error(`HTTP error! status: ${responseAll.status}`);
                 }
-                const allFilms = await responseAll.clone.json();
+                const allFilms = await responseAll.clone().json();
                 const filmContainer = document.getElementById('filmContainer');
                 const allfilmContainer = document.getElementById('allfilmContainer');
                 data.popular.forEach(filmName => {
