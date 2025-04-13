@@ -89,9 +89,10 @@
             }
             
             function showError(message) {
-                errorEl.textContent = message;
-                errorEl.style.display = 'block';
-                statusEl.style.display = 'none';
+                console.log(message);
+            //     errorEl.textContent = message;
+            //     errorEl.style.display = 'block';
+            //     statusEl.style.display = 'none';
             }
             
             function updateStatus(message) {
@@ -112,7 +113,7 @@
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
                     updateStatus('正在播放: ' + m3u8Url);
                     video.play().catch(e => {
-                        showError('自动播放失败: ' + e.message);
+                        console.log('自动播放失败: ' + e.message);
                     });
                 });
                 
