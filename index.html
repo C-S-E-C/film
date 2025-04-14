@@ -12,12 +12,12 @@
             padding: 0;
             background-color: #f4f4f9;
         }
-        .film-container {
+/*         .film-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
-        }
+        } */
         .film-card {
             background: #fff;
             border-radius: 8px;
@@ -43,11 +43,11 @@
     </style>
 </head>
 <body>
-    <h3>Popular</h1>
-    <div class="film-container" id="filmContainer"></div>
+<!--     <h3>Popular</h1>
+    <div class="film-container" id="filmContainer"></div> -->
         <!-- Films will be dynamically loaded here -->
     <br />
-    <h3>All</h3>
+<!--     <h3>All</h3> -->
     <div class="allfilm-container" id="allfilmContainer"></div>
 
     <script>
@@ -65,21 +65,21 @@
                 const allFilms = await responseAll.clone().json();
                 const filmContainer = document.getElementById('filmContainer');
                 const allfilmContainer = document.getElementById('allfilmContainer');
-                data.popular.forEach(filmName => {
-                    const filmDetails = allFilms.find(film => film.name === filmName);
-                    if (filmDetails) {
-                        const filmCard = document.createElement('div');
-                        filmCard.className = 'film-card';
-                        const a = document.createElement('a');
-                        a.href = "details.html?id=" + filmDetails.sha512;
-                        a.innerHTML = `
-                            <img style="width:70px;height:100px;"src="https://film.r2.csec.top/films/${filmDetails.sha512}/cover.png" alt="${filmDetails.name}">
-                            <h3>${filmDetails.name}</h3>
-                        `;
-                        filmCard.appendChild(a);
-                        filmContainer.appendChild(filmCard);
-                    }
-                });
+                // data.popular.forEach(filmName => {
+                //     const filmDetails = allFilms.find(film => film.name === filmName);
+                //     if (filmDetails) {
+                //         const filmCard = document.createElement('div');
+                //         filmCard.className = 'film-card';
+                //         const a = document.createElement('a');
+                //         a.href = "details.html?id=" + filmDetails.sha512;
+                //         a.innerHTML = `
+                //             <img style="width:70px;height:100px;"src="https://film.r2.csec.top/films/${filmDetails.sha512}/cover.png" alt="${filmDetails.name}">
+                //             <h3>${filmDetails.name}</h3>
+                //         `;
+                //         filmCard.appendChild(a);
+                //         filmContainer.appendChild(filmCard);
+                //     }
+                // });
                 allFilms.forEach(film => {
                     const filmCard = document.createElement('div');
                     filmCard.className = 'film-card';
