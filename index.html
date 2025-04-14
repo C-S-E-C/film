@@ -12,6 +12,13 @@
             padding: 0;
             background-color: #f4f4f9;
         }
+        .toolbar {
+            top: 0px;
+            width: 100%;
+            height: 50px;
+            position: fixed;
+            display: inline-flex;
+        }
 /*         .film-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -44,6 +51,10 @@
     </style>
 </head>
 <body>
+    <div class="toolbar">
+        <input onkeyup="search()" type="text" id="searchInput" placeholder="Search for films..." style="margin: 10px; padding: 5px; width: 200px;">
+
+    </div>
 <!--     <h3>Popular</h1>
     <div class="film-container" id="filmContainer"></div> -->
         <!-- Films will be dynamically loaded here -->
@@ -54,17 +65,17 @@
     <script>
         async function fetchPopularFilms() {
             try {
-                const response = await fetch('https://film.r2.csec.top/index.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.clone().json();
+                // const response = await fetch('https://film.r2.csec.top/index.json');
+                // if (!response.ok) {
+                //     throw new Error(`HTTP error! status: ${response.status}`);
+                // }
+                // const data = await response.clone().json();
                 const responseAll = await fetch('https://film.r2.csec.top/all.json');
                 if (!responseAll.ok) {
                     throw new Error(`HTTP error! status: ${responseAll.status}`);
                 }
                 const allFilms = await responseAll.clone().json();
-                const filmContainer = document.getElementById('filmContainer');
+                // const filmContainer = document.getElementById('filmContainer');
                 const allfilmContainer = document.getElementById('allfilmContainer');
                 // data.popular.forEach(filmName => {
                 //     const filmDetails = allFilms.find(film => film.name === filmName);
@@ -99,6 +110,24 @@
         }
 
         fetchPopularFilms();
+    </script>
+    <script>
+        function search() {
+           var input, filter, ul, li, a, i, txtValue;
+           input = document.getElementById('searchInput');
+           filter = input.value.toUpperCase();
+           ul = document.getElementById("allfilmContainer");
+           li = ul.getElementsByClassName("film-card");
+              for (i = 0; i < li.length; i++) {
+                 a = li[i].getElementsByTagName("a")[0];
+                 txtValue = a.textContent || a.innerText;
+                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+                 } else {
+                li[i].style.display = "none";
+                 }
+              }
+        }
     </script>
 </body>
 </html>
